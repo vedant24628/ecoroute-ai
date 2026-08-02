@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Worker Collection Portal – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Collection Agent Portal</h1>
+            <p class="text-secondary small mb-0">Worker: <strong>{{ worker.full_name }}</strong> (ID: <code>{{ worker.employee_id }}</code>)</p>
+        </div>
+        <span class="badge badge-{{ worker.status|lower }} fs-6">{{ worker.status }}</span>
+    </div>
+
+    <!-- Active Task Highlight Card -->
+    {% if active_assignment %}
+    <div class="glass-card p-4 border-success border-2 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="badge bg-success">CURRENT ACTIVE TASK</span>
+            <span class="small text-muted">Dispatched {{ active_assignment.assigned_at.strftime('%H:%M') }}</span>
+        </div>
+        <h3 class="fw-bold text-success mb-2">{{ active_assignment.pickup_request.society.society_name }}</h3>
+        <p class="text-secondary mb-3"><i class="fas fa-location-dot me-1"></i> {{ active_assignment.pickup_request.society.address }}</p>
+        
+        <div class="row g-2 mb-3">
+            <div class="col-4">
+                <div class="p-2 rounded bg-body-tertiary">
+                    <div class="small text-muted">Vehicle</div>
+                    <div class="fw-bold">{{ active_assignment.vehicle.vehicle_number }}</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-2 rounded bg-body-tertiary">
+                    <div class="small text-muted">Est. Weight</div>
+                    <div class="fw-bold">{{ active_assignment.pickup_request.estimated_weight }} kg</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-2 rounded bg-body-tertiary">
+                    <div class="small text-muted">Urgency</div>
+                    <div class="fw-bold text-warning">{{ active_assignment.pickup_request.urgency_level }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('worker.navigate', assignment_id=active_assignment.id) }}" class="btn btn-primary-custom flex-grow-1 rounded-pill">
+                <i class="fas fa-location-arrow me-1"></i> Open GPS Navigation
+            </a>
+            <a href="{{ url_for('worker.collect', assignment_id=active_assignment.id) }}" class="btn btn-accent-custom flex-grow-1 rounded-pill">
+                <i class="fas fa-camera me-1"></i> Upload Waste Proof
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Assigned Trips History -->
+    <div class="glass-card p-4">
+        <h5 class="fw-bold mb-3">Today's Assigned Collection Schedule</h5>
+        <div class="table-responsive">
+            <table class="table align-middle table-hover">
+                <thead>
+                    <tr>
+                        <th>Req Code</th>
+                        <th>Society Name</th>
+                        <th>Preferred Time</th>
+                        <th>Est. Weight</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in assignments %}
+                    <tr>
+                        <td class="fw-bold"><code>{{ a.pickup_request.request_code }}</code></td>
+                        <td>{{ a.pickup_request.society.society_name }}</td>
+                        <td>{{ a.pickup_request.preferred_slot }}</td>
+                        <td>{{ a.pickup_request.estimated_weight }} kg</td>
+                        <td><span class="badge badge-{{ a.status|lower }}">{{ a.status }}</span></td>
+                        <td>
+                            {% if a.status in ['DISPATCHED', 'EN_ROUTE'] %}
+                            <a href="{{ url_for('worker.collect', assignment_id=a.id) }}" class="btn btn-sm btn-success rounded-pill">Log Collection</a>
+                            {% else %}
+                            <span class="badge bg-light text-dark">Completed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-center text-muted">No assignments scheduled for today.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

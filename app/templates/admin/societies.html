@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Manage Societies – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-2 col-md-3">
+            <div class="sidebar glass-card mb-4">
+                <div class="fw-bold text-uppercase small text-muted mb-3">Super Admin</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a href="{{ url_for('admin.dashboard') }}" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.societies') }}" class="nav-link active"><i class="fas fa-building"></i> Societies</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.vehicles') }}" class="nav-link"><i class="fas fa-truck-pickup"></i> Vehicles</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.workers') }}" class="nav-link"><i class="fas fa-users-gear"></i> Workers</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.drivers') }}" class="nav-link"><i class="fas fa-id-card"></i> Drivers</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.assignments') }}" class="nav-link"><i class="fas fa-route"></i> Assignments</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.live_fleet') }}" class="nav-link"><i class="fas fa-map-location-dot"></i> Live Fleet Map</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.reports') }}" class="nav-link"><i class="fas fa-file-invoice"></i> Reports</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-10 col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 fw-bold mb-0">Registered Societies</h1>
+                <a href="{{ url_for('auth.register_society') }}" class="btn btn-primary-custom rounded-pill"><i class="fas fa-plus me-1"></i> Register New Society</a>
+            </div>
+
+            <div class="glass-card p-4">
+                <div class="table-responsive">
+                    <table class="table align-middle table-hover">
+                        <thead>
+                            <tr>
+                                <th>Society Name</th>
+                                <th>Reg No</th>
+                                <th>Secretary</th>
+                                <th>Contact</th>
+                                <th>Flats / Residents</th>
+                                <th>Est. Waste</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in societies %}
+                            <tr>
+                                <td class="fw-bold text-success">{{ s.society_name }}</td>
+                                <td><code>{{ s.registration_number }}</code></td>
+                                <td>{{ s.secretary_name }}</td>
+                                <td>
+                                    <div class="small">{{ s.email }}</div>
+                                    <div class="small text-muted">{{ s.phone }}</div>
+                                </td>
+                                <td>{{ s.num_flats }} Flats / {{ s.total_residents }} Res</td>
+                                <td>{{ s.estimated_daily_waste }} kg/day</td>
+                                <td><span class="badge badge-{{ s.status|lower }}">{{ s.status }}</span></td>
+                                <td>
+                                    {% if s.status == 'PENDING' %}
+                                    <a href="{{ url_for('admin.approve_society', society_id=s.id) }}" class="btn btn-sm btn-success">Approve</a>
+                                    {% else %}
+                                    <span class="badge bg-light text-dark">Verified</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="8" class="text-center text-muted">No societies registered yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

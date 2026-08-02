@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Register Society – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="badge bg-success-subtle text-success border rounded-pill px-3 py-2 mb-2">Housing Society Onboarding</span>
+                    <h2 class="display-6 fw-bold">Register Your Society</h2>
+                    <p class="text-secondary small">Set up automated waste collection and live tracking for your residential complex.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('auth.register_society') }}">
+                    {{ form.hidden_tag() }}
+
+                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3"><i class="fas fa-building me-2"></i> Society Identification</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.society_name.label }}</label>
+                            {{ form.society_name(class="form-control", placeholder="e.g. Green Acres Housing Complex") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.registration_number.label }}</label>
+                            {{ form.registration_number(class="form-control", placeholder="e.g. REG-PUN-2024-889") }}
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3"><i class="fas fa-user-tie me-2"></i> Secretary Credentials</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">{{ form.secretary_name.label }}</label>
+                            {{ form.secretary_name(class="form-control", placeholder="Full Name") }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">{{ form.email.label }}</label>
+                            {{ form.email(class="form-control", placeholder="secretary@society.com") }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">{{ form.phone.label }}</label>
+                            {{ form.phone(class="form-control", placeholder="+91 98765 43210") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.password.label }}</label>
+                            {{ form.password(class="form-control", placeholder="••••••••") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.confirm_password.label }}</label>
+                            {{ form.confirm_password(class="form-control", placeholder="••••••••") }}
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3"><i class="fas fa-location-dot me-2"></i> Location & Address</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">{{ form.address.label }}</label>
+                            {{ form.address(class="form-control", rows="2", placeholder="Building / Street / Area") }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">{{ form.landmark.label }}</label>
+                            {{ form.landmark(class="form-control", placeholder="Near Park / Metro Station") }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">{{ form.city.label }}</label>
+                            {{ form.city(class="form-control") }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">{{ form.state.label }}</label>
+                            {{ form.state(class="form-control") }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold">{{ form.pin_code.label }}</label>
+                            {{ form.pin_code(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.latitude.label }}</label>
+                            {{ form.latitude(class="form-control", step="any") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.longitude.label }}</label>
+                            {{ form.longitude(class="form-control", step="any") }}
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3"><i class="fas fa-users-viewfinder me-2"></i> Demographics & Waste Details</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">{{ form.num_buildings.label }}</label>
+                            {{ form.num_buildings(class="form-control") }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">{{ form.num_wings.label }}</label>
+                            {{ form.num_wings(class="form-control") }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">{{ form.num_flats.label }}</label>
+                            {{ form.num_flats(class="form-control") }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">{{ form.total_residents.label }}</label>
+                            {{ form.total_residents(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.estimated_daily_waste.label }}</label>
+                            {{ form.estimated_daily_waste(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.preferred_pickup_time.label }}</label>
+                            {{ form.preferred_pickup_time(class="form-select") }}
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        {{ form.submit(class="btn btn-primary-custom btn-lg rounded-pill") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

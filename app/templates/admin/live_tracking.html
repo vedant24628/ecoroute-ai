@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Live Fleet Map – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 fw-bold mb-0">Super Admin Live Fleet Control</h1>
+        <div class="d-flex align-items-center gap-2">
+            <span class="pulse-dot"></span>
+            <span class="badge bg-success border">Live OpenStreetMap Telemetry</span>
+        </div>
+    </div>
+
+    <div class="glass-card p-3 mb-4">
+        <div id="adminFleetMap" class="map-container" style="height: 600px;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/live_tracking.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const adminTracker = new LiveTracker('adminFleetMap');
+    adminTracker.init(18.5204, 73.8567, 13);
+    {% for s in societies %}
+        adminTracker.addSociety({{ s.id }}, "{{ s.society_name }}", {{ s.latitude }}, {{ s.longitude }}, "{{ s.address }}");
+    {% endfor %}
+});
+</script>
+{% endblock %}

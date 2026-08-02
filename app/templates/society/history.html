@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Pickup History – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold mb-0">Society Collection History</h1>
+        <a href="{{ url_for('society.dashboard') }}" class="btn btn-outline-success rounded-pill">Back to Dashboard</a>
+    </div>
+
+    <div class="glass-card p-4">
+        <div class="table-responsive">
+            <table class="table align-middle table-hover">
+                <thead>
+                    <tr>
+                        <th>Collection Date</th>
+                        <th>Worker</th>
+                        <th>Vehicle</th>
+                        <th>Total Weight</th>
+                        <th>Category Breakdown</th>
+                        <th>Proof</th>
+                        <th>Certificate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in collections %}
+                    <tr>
+                        <td>{{ c.collected_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ c.worker.full_name }}</td>
+                        <td><code>{{ c.vehicle.vehicle_number }}</code></td>
+                        <td class="fw-bold text-success">{{ c.total_weight_kg }} kg</td>
+                        <td class="small">
+                            <div>Wet: <strong>{{ c.wet_waste_kg }} kg</strong></div>
+                            <div>Dry: <strong>{{ c.dry_waste_kg }} kg</strong></div>
+                            <div>Plastic: <strong>{{ c.recyclable_kg }} kg</strong></div>
+                        </td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success"><i class="fas fa-image me-1"></i> Verified</span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('society.download_report', collection_id=c.id) }}" class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-file-pdf me-1"></i> PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-muted">No historical collections recorded yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

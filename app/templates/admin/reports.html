@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}System Reports – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold mb-0">Waste Collection & Verification Reports</h1>
+    </div>
+
+    <div class="glass-card p-4">
+        <div class="table-responsive">
+            <table class="table align-middle table-hover">
+                <thead>
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Society</th>
+                        <th>Worker / Vehicle</th>
+                        <th>Total Weight</th>
+                        <th>Breakdown (Wet / Dry / Plastic / Haz)</th>
+                        <th>Collected At</th>
+                        <th>PDF Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in collections %}
+                    <tr>
+                        <td class="fw-bold"><code>ECR-COL-{{ c.id }}</code></td>
+                        <td class="fw-semibold text-success">{{ c.society.society_name }}</td>
+                        <td>
+                            <div>{{ c.worker.full_name }}</div>
+                            <div class="small text-muted">{{ c.vehicle.vehicle_number }}</div>
+                        </td>
+                        <td class="fw-bold fs-6">{{ c.total_weight_kg }} kg</td>
+                        <td class="small">
+                            <span class="badge bg-success-subtle text-success">{{ c.wet_waste_kg }}k Wet</span>
+                            <span class="badge bg-info-subtle text-info">{{ c.dry_waste_kg }}k Dry</span>
+                            <span class="badge bg-primary-subtle text-primary">{{ c.recyclable_kg }}k Plas</span>
+                            <span class="badge bg-danger-subtle text-danger">{{ c.hazardous_kg }}k Haz</span>
+                        </td>
+                        <td>{{ c.collected_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.download_report', collection_id=c.id) }}" class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-file-pdf me-1"></i> Download PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-muted">No collection records found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

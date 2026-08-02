@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Carbon Footprint Report – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="glass-card p-4 p-md-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <span class="badge bg-success-subtle text-success border rounded-pill px-3 py-2 mb-2">Verified Environmental Certificate</span>
+                <h1 class="display-6 fw-bold text-success mb-1">Sustainability & Carbon Offset Report</h1>
+                <p class="text-secondary small">Official Green Impact Statement for <strong>{{ society.society_name }}</strong></p>
+            </div>
+            <div class="text-end">
+                <div class="display-5 fw-bold text-warning">{{ impact.eco_score }}</div>
+                <div class="small text-muted fw-bold text-uppercase">Society Green Score</div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5 text-center">
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-body-tertiary">
+                    <div class="icon-wrapper icon-emerald mx-auto mb-2"><i class="fas fa-cloud-arrow-down"></i></div>
+                    <h3 class="fw-bold mb-0 text-success">{{ impact.co2_saved_kg }} kg</h3>
+                    <div class="small text-secondary">CO2 Emissions Prevented</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-body-tertiary">
+                    <div class="icon-wrapper icon-cyan mx-auto mb-2"><i class="fas fa-tree"></i></div>
+                    <h3 class="fw-bold mb-0 text-info">{{ impact.trees_equivalent }} Trees</h3>
+                    <div class="small text-secondary">Annual Tree Absorption Eq</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-body-tertiary">
+                    <div class="icon-wrapper icon-gold mx-auto mb-2"><i class="fas fa-arrows-rotate"></i></div>
+                    <h3 class="fw-bold mb-0 text-warning">{{ impact.recycling_rate_percent }}%</h3>
+                    <div class="small text-secondary">Zero-Waste Recycling Rate</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 border rounded bg-body-tertiary">
+                    <div class="icon-wrapper icon-blue mx-auto mb-2"><i class="fas fa-dumpster"></i></div>
+                    <h3 class="fw-bold mb-0 text-primary">{{ impact.landfill_saved_m3 }} m³</h3>
+                    <div class="small text-secondary">Landfill Space Saved</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center pt-3 border-top">
+            <a href="{{ url_for('society.dashboard') }}" class="btn btn-outline-success rounded-pill px-4 me-2">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

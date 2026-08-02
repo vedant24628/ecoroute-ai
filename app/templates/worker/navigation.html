@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Route Navigation – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Turn-by-Turn GPS Navigation</h1>
+            <p class="text-secondary small mb-0">Destination: <strong>{{ assignment.pickup_request.society.society_name }}</strong></p>
+        </div>
+        <a href="{{ url_for('worker.collect', assignment_id=assignment.id) }}" class="btn btn-accent-custom rounded-pill">
+            Arrived & Log Collection
+        </a>
+    </div>
+
+    <div class="glass-card p-3 mb-4">
+        <div id="workerNavMap" class="map-container" style="height: 520px;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/live_tracking.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const navTracker = new LiveTracker('workerNavMap');
+    const socLat = {{ assignment.pickup_request.society.latitude }};
+    const socLng = {{ assignment.pickup_request.society.longitude }};
+    const vLat = {{ assignment.vehicle.current_lat }};
+    const vLng = {{ assignment.vehicle.current_lng }};
+
+    navTracker.init(vLat, vLng, 14);
+    navTracker.addSociety({{ assignment.pickup_request.society.id }}, "{{ assignment.pickup_request.society.society_name }}", socLat, socLng, "{{ assignment.pickup_request.society.address }}");
+    navTracker.drawRoute([
+        {lat: vLat, lng: vLng},
+        {lat: socLat, lng: socLng}
+    ]);
+});
+</script>
+{% endblock %}

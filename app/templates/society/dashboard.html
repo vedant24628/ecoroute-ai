@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Society Secretary Portal – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Society Sidebar -->
+        <div class="col-lg-2 col-md-3">
+            <div class="sidebar glass-card mb-4">
+                <div class="fw-bold text-uppercase small text-muted mb-3">Society Portal</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a href="{{ url_for('society.dashboard') }}" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="{{ url_for('society.schedule') }}" class="nav-link"><i class="fas fa-calendar-plus"></i> Schedule Pickup</a></li>
+                    <li class="nav-item"><a href="{{ url_for('society.history') }}" class="nav-link"><i class="fas fa-clock-rotate-left"></i> Pickup History</a></li>
+                    <li class="nav-item"><a href="{{ url_for('society.tracking') }}" class="nav-link"><i class="fas fa-location-crosshairs"></i> Live Tracking</a></li>
+                    <li class="nav-item"><a href="{{ url_for('society.carbon_report') }}" class="nav-link"><i class="fas fa-leaf"></i> Carbon Savings</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-10 col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 fw-bold mb-1">{{ society.society_name }}</h1>
+                    <p class="text-secondary small mb-0">Secretary: <strong>{{ society.secretary_name }}</strong> • Reg: <code>{{ society.registration_number }}</code></p>
+                </div>
+                <a href="{{ url_for('society.schedule') }}" class="btn btn-primary-custom rounded-pill">
+                    <i class="fas fa-plus me-1"></i> Schedule Pickup
+                </a>
+            </div>
+
+            <!-- Society Metrics -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="text-secondary small mb-1">Total Pickups</div>
+                        <h2 class="fw-bold mb-0 text-success">{{ total_pickups }}</h2>
+                        <span class="small text-muted">Completed Collections</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="text-secondary small mb-1">Waste Collected</div>
+                        <h2 class="fw-bold mb-0 text-primary">{{ total_waste }} <small class="fs-6">kg</small></h2>
+                        <span class="small text-muted">Total Weight</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="text-secondary small mb-1">CO2 Saved</div>
+                        <h2 class="fw-bold mb-0 text-emerald">{{ carbon_impact.co2_saved_kg }} <small class="fs-6">kg</small></h2>
+                        <span class="small text-success"><i class="fas fa-tree"></i> {{ carbon_impact.trees_equivalent }} Trees Equivalent</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="text-secondary small mb-1">Eco Score</div>
+                        <h2 class="fw-bold mb-0 text-warning">{{ carbon_impact.eco_score }} <small class="fs-6">/100</small></h2>
+                        <span class="small text-warning">Green Society Rank</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Track Alert -->
+            {% if active_assignment %}
+            <div class="alert alert-success d-flex justify-content-between align-items-center rounded-pill px-4 shadow-sm mb-4">
+                <div>
+                    <i class="fas fa-truck-fast fs-4 me-2"></i>
+                    <strong>Collection Vehicle Assigned!</strong> Truck <code>{{ active_assignment.vehicle.vehicle_number }}</code> is currently en route to your society.
+                </div>
+                <a href="{{ url_for('society.tracking') }}" class="btn btn-sm btn-success rounded-pill px-3">Live Track Vehicle</a>
+            </div>
+            {% endif %}
+
+            <!-- AI Forecast & Pickup Request History -->
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="glass-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0"><i class="fas fa-brain text-success me-2"></i> AI Waste 7-Day Forecast</h5>
+                            <span class="badge bg-success">Predictive Analytics</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Day</th>
+                                        <th>Est. Total (kg)</th>
+                                        <th>Wet / Dry</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for f in ai_forecast.predictions %}
+                                    <tr>
+                                        <td>{{ f.date }}</td>
+                                        <td class="fw-semibold">{{ f.day_name }}</td>
+                                        <td class="fw-bold text-success">{{ f.total_kg }} kg</td>
+                                        <td class="small">{{ f.wet_waste_kg }}k / {{ f.dry_waste_kg }}k</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="glass-card p-4">
+                        <h5 class="fw-bold mb-3">Recent Society Pickup Requests</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Req ID</th>
+                                        <th>Scheduled Date</th>
+                                        <th>Slot</th>
+                                        <th>Urgency</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for p in pickups %}
+                                    <tr>
+                                        <td><code>{{ p.request_code }}</code></td>
+                                        <td>{{ p.scheduled_date }}</td>
+                                        <td>{{ p.preferred_slot }}</td>
+                                        <td><span class="badge badge-{{ p.urgency_level|lower }}">{{ p.urgency_level }}</span></td>
+                                        <td><span class="badge badge-{{ p.status|lower }}">{{ p.status }}</span></td>
+                                    </tr>
+                                    {% else %}
+                                    <tr><td colspan="5" class="text-center text-muted">No pickup requests submitted.</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

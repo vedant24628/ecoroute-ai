@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Contact Us – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <h1 class="display-5 fw-bold mb-3">Get in <span class="text-gradient">Touch</span></h1>
+            <p class="text-secondary lead mb-4">Have questions about integrating your residential complex or managing fleet vehicles? Our green team is here to assist.</p>
+
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="icon-wrapper icon-emerald"><i class="fas fa-location-dot"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-0">Headquarters</h6>
+                    <p class="text-secondary small mb-0">EcoRoute AI Tech Park, Smart City Zone, Pune, India</p>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="icon-wrapper icon-cyan"><i class="fas fa-phone"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-0">Phone & Helpline</h6>
+                    <p class="text-secondary small mb-0">+91 1800-ECO-ROUTE (326-7688)</p>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="icon-wrapper icon-gold"><i class="fas fa-envelope"></i></div>
+                <div>
+                    <h6 class="fw-bold mb-0">Email Support</h6>
+                    <p class="text-secondary small mb-0">support@ecoroute.ai</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="glass-card p-4">
+                <h3 class="fw-bold mb-4">Send Us a Message</h3>
+                <form method="POST" action="{{ url_for('main.contact') }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Your Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Secretary / Admin Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <input type="email" name="email" class="form-control" placeholder="name@society.com" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Message / Query</label>
+                            <textarea name="message" rows="5" class="form-control" placeholder="Tell us about your society requirements..." required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary-custom btn-lg rounded-pill px-4">
+                                <i class="fas fa-paper-plane me-2"></i> Send Message
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

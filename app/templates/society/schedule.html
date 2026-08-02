@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Schedule Pickup – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="badge bg-success-subtle text-success border rounded-pill px-3 py-2 mb-2">Society Waste Request</span>
+                    <h2 class="fw-bold mb-1">Schedule Waste Collection</h2>
+                    <p class="text-secondary small">Request regular or instant waste pickup for your society wings.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('society.schedule') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ form.scheduled_date.label }}</label>
+                        {{ form.scheduled_date(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ form.preferred_slot.label }}</label>
+                        {{ form.preferred_slot(class="form-select") }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ form.estimated_weight.label }}</label>
+                        {{ form.estimated_weight(class="form-control") }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ form.urgency_level.label }}</label>
+                        {{ form.urgency_level(class="form-select") }}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">{{ form.notes.label }}</label>
+                        {{ form.notes(class="form-control", rows="3", placeholder="e.g. Extra cardboard boxes collected near Wing B entrance.") }}
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary-custom btn-lg rounded-pill") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

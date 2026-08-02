@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Features – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center max-w-75 mx-auto mb-5">
+        <span class="badge bg-success-subtle text-success border rounded-pill px-3 py-2 mb-2">Platform Capabilities</span>
+        <h1 class="display-4 fw-bold">Comprehensive <span class="text-gradient">AI Waste Management</span></h1>
+        <p class="lead text-secondary">Discover how EcoRoute AI unites housing societies, collection fleets, and municipal recycling centers.</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="icon-wrapper icon-emerald"><i class="fas fa-brain"></i></div>
+                    <h3 class="mb-0">AI Route Optimization</h3>
+                </div>
+                <p class="text-secondary">Solves complex multi-stop Vehicle Routing Problems (VRP) using genetic algorithms & real-time traffic delay metrics. Prioritizes urgent society pickups while minimizing fuel emissions.</p>
+                <ul class="list-unstyled text-secondary small">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> 34% Fuel & Emission Reduction</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Urgency-based Dynamic Re-routing</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Capacity-aware Vehicle Balancing</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="icon-wrapper icon-cyan"><i class="fas fa-satellite-dish"></i></div>
+                    <h3 class="mb-0">Real-Time Vehicle Tracking</h3>
+                </div>
+                <p class="text-secondary">Track collection vehicles live on OpenStreetMap with Leaflet.js rendering. Society secretaries receive dynamic arrival notifications and accurate ETA countdowns.</p>
+                <ul class="list-unstyled text-secondary small">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Live 3-Second Telemetry Refresh</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Route Geometry Polyline Rendering</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Instant Vehicle Status Updates</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100">
+                <div class="icon-wrapper icon-gold mb-3"><i class="fas fa-chart-pie"></i></div>
+                <h3>Waste Prediction & Analytics</h3>
+                <p class="text-secondary">Predict society daily waste volume based on flat density, resident demographics, and weekday generation trends. View real-time Chart.js breakdown dashboards.</p>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100">
+                <div class="icon-wrapper icon-blue mb-3"><i class="fas fa-file-pdf"></i></div>
+                <h3>Automated PDF Green Reports</h3>
+                <p class="text-secondary">Generate official ReportLab PDF green footprint certificates detailing CO2 saved, trees equivalent, and landfill space conserved for society AGMs.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

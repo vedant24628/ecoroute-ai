@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="py-5 overflow-hidden" style="background: radial-gradient(circle at 80% 20%, rgba(129, 199, 132, 0.15) 0%, rgba(245, 247, 244, 0) 60%);">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 mb-3 fw-semibold">
+                    <i class="fas fa-sparkles me-1"></i> Next-Gen Smart City Waste Ecosystem
+                </span>
+                <h1 class="display-4 fw-extrabold mb-3">
+                    AI-Powered <span class="text-gradient">Smart Society</span> Waste Management
+                </h1>
+                <p class="lead text-secondary mb-4" style="line-height: 1.6;">
+                    Empowering residential societies with intelligent waste collection, real-time vehicle tracking, AI-driven route optimization, and sustainable recycling—all on one platform.
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{{ url_for('auth.register_society') }}" class="btn btn-primary-custom btn-lg rounded-pill px-4">
+                        <i class="fas fa-building me-2"></i> Register Society
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-success btn-lg rounded-pill px-4">
+                        <i class="fas fa-calendar-check me-2"></i> Schedule Pickup
+                    </a>
+                    <a href="{{ url_for('main.live_tracking_public') }}" class="btn btn-accent-custom btn-lg rounded-pill px-4">
+                        <i class="fas fa-location-crosshairs me-2"></i> Track Vehicle
+                    </a>
+                    <a href="#features" class="btn btn-link text-decoration-none text-secondary btn-lg">
+                        Learn More <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="d-flex align-items-center gap-4 pt-3 border-top border-light-subtle text-secondary small">
+                    <div><i class="fas fa-shield-check text-success me-1"></i> Verified Zero-Waste</div>
+                    <div><i class="fas fa-bolt text-warning me-1"></i> Real-Time Telemetry</div>
+                    <div><i class="fas fa-leaf text-success me-1"></i> 94% Recycling Rate</div>
+                </div>
+            </div>
+
+            <!-- Hero Live Card Preview -->
+            <div class="col-lg-6">
+                <div class="glass-card p-4 position-relative">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="pulse-dot"></span>
+                            <span class="fw-bold fs-5">Active Dispatch Fleet</span>
+                        </div>
+                        <span class="badge badge-approved">AI Route Optimized</span>
+                    </div>
+
+                    <!-- Interactive Live Map Container -->
+                    <div id="heroMap" class="map-container mb-3" style="height: 320px;"></div>
+
+                    <div class="row g-2 text-center">
+                        <div class="col-4">
+                            <div class="p-2 rounded bg-body-tertiary">
+                                <div class="small text-muted">Vehicle</div>
+                                <div class="fw-bold text-success">MH-12-EC-409</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 rounded bg-body-tertiary">
+                                <div class="small text-muted">ETA</div>
+                                <div class="fw-bold text-primary">8 Mins</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 rounded bg-body-tertiary">
+                                <div class="small text-muted">Payload</div>
+                                <div class="fw-bold text-warning">420 / 1000 kg</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATISTICS COUNTER BAR -->
+<section class="py-4 bg-success text-white">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-6 col-md-3">
+                <h2 class="display-6 fw-bold mb-0">{{ total_societies }}</h2>
+                <div class="small text-white-50 text-uppercase fw-semibold">Societies Registered</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <h2 class="display-6 fw-bold mb-0">{{ total_vehicles }}</h2>
+                <div class="small text-white-50 text-uppercase fw-semibold">Smart Fleet Vehicles</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <h2 class="display-6 fw-bold mb-0">{{ total_waste_kg }} kg</h2>
+                <div class="small text-white-50 text-uppercase fw-semibold">Total Waste Processed</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <h2 class="display-6 fw-bold mb-0">{{ total_co2_kg }} kg</h2>
+                <div class="small text-white-50 text-uppercase fw-semibold">CO2 Emissions Avoided</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section id="features" class="py-5">
+    <div class="container py-4">
+        <div class="text-center max-w-75 mx-auto mb-5">
+            <h2 class="fs-1 fw-bold">Engineered for <span class="text-gradient">Modern Housing Societies</span></h2>
+            <p class="text-secondary lead">Say goodbye to irregular collection schedules. EcoRoute AI automates pickup logistics from building doorstep to recycling plant.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-wrapper icon-emerald mb-3">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h4>AI Route Optimization</h4>
+                    <p class="text-secondary small">VRP dynamic algorithms calculate the shortest, fastest vehicle routing across housing societies, reducing fuel consumption by up to 34%.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-wrapper icon-cyan mb-3">
+                        <i class="fas fa-location-crosshairs"></i>
+                    </div>
+                    <h4>Live GPS Telemetry</h4>
+                    <p class="text-secondary small">Track assigned collection trucks live on OpenStreetMap with accurate ETA countdowns, live vehicle markers, and instant arrival alerts.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-wrapper icon-gold mb-3">
+                        <i class="fas fa-chart-line-up"></i>
+                    </div>
+                    <h4>Waste Forecasting AI</h4>
+                    <p class="text-secondary small">Predict daily society waste volumes based on flat counts and resident density, enabling proactive vehicle dispatch and zero overflow.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-wrapper icon-blue mb-3">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h4>Carbon Offset Certificates</h4>
+                    <p class="text-secondary small">Download official PDF reports proving your society's monthly CO2 savings, landfill diversion rate, and recycling score.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-wrapper icon-orange mb-3">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h4>Verified Proof of Pickup</h4>
+                    <p class="text-secondary small">Workers upload timestamped collection photos and category weight logs to guarantee transparent society service verification.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="icon-wrapper icon-emerald mb-3">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h4>Role-Based Portals</h4>
+                    <p class="text-secondary small">Tailored user interfaces for Super Admins, Society Secretaries, and Fleet Collection Drivers with real-time sync.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-5 style-section" style="background: var(--surface);">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fs-1 fw-bold">How <span class="text-gradient">EcoRoute AI</span> Works</h2>
+            <p class="text-secondary">Simple 4-step workflow for zero-hassle society waste management.</p>
+        </div>
+
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="p-3">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: #1B5E20; color: white; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.4rem;" class="mb-3">1</div>
+                    <h5>Secretary Schedules</h5>
+                    <p class="text-secondary small">Secretary registers society and selects convenient collection slots or requests instant pickup.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: #43A047; color: white; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.4rem;" class="mb-3">2</div>
+                    <h5>AI Dispatches Vehicle</h5>
+                    <p class="text-secondary small">System calculates optimal vehicle sequence and assigns nearest worker & driver truck team.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: #00BCD4; color: white; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.4rem;" class="mb-3">3</div>
+                    <h5>Live Tracking & Pickup</h5>
+                    <p class="text-secondary small">Society tracks vehicle live. Worker arrives, collects segregated waste, and uploads photo proof.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3">
+                    <div style="width: 56px; height: 56px; border-radius: 50%; background: #F9A825; color: white; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.4rem;" class="mb-3">4</div>
+                    <h5>Recycling & Report</h5>
+                    <p class="text-secondary small">Waste is processed into compost & recyclables. Society receives PDF green footprint receipt.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <h2 class="fs-1 fw-bold">Trusted by <span class="text-gradient">Society Secretaries</span></h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4">
+                    <div class="text-warning mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-secondary small">"EcoRoute AI transformed our 240-flat complex. We know exactly when the truck will arrive down to the minute, and our residents love the carbon saving reports!"</p>
+                    <div class="fw-bold mt-3">Mr. Rajesh Sharma</div>
+                    <div class="small text-muted">Secretary, Green Meadows Society</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4">
+                    <div class="text-warning mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-secondary small">"The route optimization feature reduced our society pickup delays to zero. Transparent image verification ensures total accountability."</p>
+                    <div class="fw-bold mt-3">Mrs. Sunita Kulkarni</div>
+                    <div class="small text-muted">Secretary, Silver Oak Heights</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4">
+                    <div class="text-warning mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="text-secondary small">"Managing waste collection across 5 wings used to be chaotic. EcoRoute AI made it as smooth as ordering an Uber!"</p>
+                    <div class="fw-bold mt-3">Dr. Amit Verma</div>
+                    <div class="small text-muted">President, Royal Palms Residency</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/live_tracking.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const heroTracker = new LiveTracker('heroMap');
+    heroTracker.init(18.5204, 73.8567, 13);
+    heroTracker.addSociety(1, 'Green Meadows Society', 18.5300, 73.8400, 'Kothrud, Pune');
+    heroTracker.addSociety(2, 'Silver Oak Heights', 18.5100, 73.8700, 'Viman Nagar, Pune');
+    heroTracker.drawRoute([
+        {lat: 18.5204, lng: 73.8567},
+        {lat: 18.5300, lng: 73.8400},
+        {lat: 18.5100, lng: 73.8700}
+    ]);
+});
+</script>
+{% endblock %}

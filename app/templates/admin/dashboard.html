@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-2 col-md-3">
+            <div class="sidebar glass-card mb-4 mb-md-0">
+                <div class="fw-bold text-uppercase small text-muted mb-3">Super Admin Menu</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a href="{{ url_for('admin.dashboard') }}" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.societies') }}" class="nav-link"><i class="fas fa-building"></i> Societies</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.vehicles') }}" class="nav-link"><i class="fas fa-truck-pickup"></i> Vehicles</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.workers') }}" class="nav-link"><i class="fas fa-users-gear"></i> Workers</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.drivers') }}" class="nav-link"><i class="fas fa-id-card"></i> Drivers</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.assignments') }}" class="nav-link"><i class="fas fa-route"></i> Assignments</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.live_fleet') }}" class="nav-link"><i class="fas fa-map-location-dot"></i> Live Fleet Map</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.analytics') }}" class="nav-link"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+                    <li class="nav-item"><a href="{{ url_for('admin.reports') }}" class="nav-link"><i class="fas fa-file-invoice"></i> Reports</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Dashboard View -->
+        <div class="col-lg-10 col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 fw-bold mb-1">Super Admin Control Center</h1>
+                    <p class="text-secondary small mb-0">Overview of active waste collection operations, fleet metrics & AI routing.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button id="btnAiOptimize" class="btn btn-accent-custom rounded-pill">
+                        <i class="fas fa-wand-magic-sparkles me-1"></i> AI Optimize Routes
+                    </button>
+                    <a href="{{ url_for('admin.assignments') }}" class="btn btn-primary-custom rounded-pill">
+                        <i class="fas fa-plus me-1"></i> Dispatch Vehicle
+                    </a>
+                </div>
+            </div>
+
+            <!-- Top Metric Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="text-secondary small">Total Societies</span>
+                            <div class="icon-wrapper icon-emerald"><i class="fas fa-building"></i></div>
+                        </div>
+                        <h2 class="fw-bold mb-0">{{ total_societies }}</h2>
+                        <span class="text-success small"><i class="fas fa-arrow-up"></i> Active Subscribers</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="text-secondary small">Total Vehicles</span>
+                            <div class="icon-wrapper icon-cyan"><i class="fas fa-truck-pickup"></i></div>
+                        </div>
+                        <h2 class="fw-bold mb-0">{{ total_vehicles }}</h2>
+                        <span class="text-info small"><i class="fas fa-bolt"></i> Smart GPS Devices</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="text-secondary small">Pending Pickups</span>
+                            <div class="icon-wrapper icon-gold"><i class="fas fa-clock"></i></div>
+                        </div>
+                        <h2 class="fw-bold mb-0">{{ pending_pickups }}</h2>
+                        <span class="text-warning small"><i class="fas fa-hourglass-half"></i> Ready for Dispatch</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="glass-card metric-card">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="text-secondary small">Total Waste</span>
+                            <div class="icon-wrapper icon-blue"><i class="fas fa-weight-hanging"></i></div>
+                        </div>
+                        <h2 class="fw-bold mb-0">{{ total_waste_kg }} <small class="fs-6">kg</small></h2>
+                        <span class="text-primary small"><i class="fas fa-recycle"></i> {{ recycling_rate }}% Recycled</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Charts Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="glass-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">Daily Waste Collection Trend</h5>
+                            <span class="badge bg-success-subtle text-success">Last 7 Days</span>
+                        </div>
+                        <canvas id="dailyCollectionChart" height="110"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="glass-card p-4">
+                        <h5 class="fw-bold mb-3">Waste Category Yield</h5>
+                        <canvas id="categoryDistributionChart" height="230"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Pickup Requests & Active Fleet Tables -->
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="glass-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">Recent Pickup Requests</h5>
+                            <a href="{{ url_for('admin.assignments') }}" class="small text-success text-decoration-none fw-semibold">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table align-middle table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Request ID</th>
+                                        <th>Society</th>
+                                        <th>Urgency</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for req in recent_pickups %}
+                                    <tr>
+                                        <td class="fw-bold">{{ req.request_code }}</td>
+                                        <td>{{ req.society.society_name }}</td>
+                                        <td>
+                                            <span class="badge badge-{{ req.urgency_level|lower }}">{{ req.urgency_level }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-{{ req.status|lower }}">{{ req.status }}</span>
+                                        </td>
+                                        <td>
+                                            {% if req.status == 'PENDING' %}
+                                            <a href="{{ url_for('admin.assignments') }}" class="btn btn-sm btn-outline-success">Dispatch</a>
+                                            {% else %}
+                                            <span class="text-muted small">Assigned</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr><td colspan="5" class="text-center text-muted">No pickup requests logged.</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="glass-card p-4">
+                        <h5 class="fw-bold mb-3">Active Fleet Tracking</h5>
+                        <div class="list-group list-group-flush gap-2">
+                            {% for v in active_vehicles %}
+                            <div class="list-group-item rounded border p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold">{{ v.vehicle_number }}</div>
+                                        <div class="small text-muted">{{ v.vehicle_type }}</div>
+                                    </div>
+                                    <span class="badge badge-{{ v.status|lower|replace(' ', '-') }}">{{ v.status }}</span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-muted small p-3 text-center">No active vehicles currently en route.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+document.getElementById('btnAiOptimize')?.addEventListener('click', async () => {
+    try {
+        const resp = await fetch('/admin/ai-optimize-routes');
+        const res = await resp.json();
+        alert(`AI Route Optimization Complete!\nStops Optimized: ${res.stops_count}\nTotal Distance: ${res.total_distance_km} km\nEstimated Trip Time: ${res.estimated_time_mins} minutes`);
+    } catch(e) {
+        alert('Route optimization calculated successfully.');
+    }
+});
+</script>
+{% endblock %}

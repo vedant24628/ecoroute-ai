@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Portal Login – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div style="background: linear-gradient(135deg, #1B5E20, #43A047); width: 48px; height: 48px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: white;" class="mb-2">
+                        <i class="fas fa-lock fs-4"></i>
+                    </div>
+                    <h2 class="fw-bold mb-1">EcoRoute Portal Login</h2>
+                    <p class="text-secondary small">Access Super Admin, Society Secretary, or Worker Dashboard.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ form.role.label }}</label>
+                        {{ form.role(class="form-select") }}
+                        {% if form.role.errors %}
+                            <div class="text-danger small mt-1">{{ form.role.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">{{ form.email.label }}</label>
+                        {{ form.email(class="form-control", placeholder="name@domain.com") }}
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">{{ form.password.label }}</label>
+                        {{ form.password(class="form-control", placeholder="••••••••") }}
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        {{ form.submit(class="btn btn-primary-custom btn-lg rounded-pill") }}
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top">
+                    <span class="text-secondary small">Secretary not registered yet?</span>
+                    <a href="{{ url_for('auth.register_society') }}" class="fw-bold text-success text-decoration-none ms-1">Register Society</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

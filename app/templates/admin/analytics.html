@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}System Analytics – {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold mb-0">System Analytics & Recycling Metrics</h1>
+        <span class="badge bg-success-subtle text-success border px-3 py-2 fw-semibold"><i class="fas fa-brain me-1"></i> AI Predictive Engine</span>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3">Daily Collection Volume (kg)</h5>
+                <canvas id="dailyCollectionChart" height="150"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3">Waste Category Yield Breakdown</h5>
+                <canvas id="categoryDistributionChart" height="150"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3">Fleet Vehicle Status Utilization</h5>
+                <canvas id="vehicleUtilizationChart" height="150"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3">Environmental Footprint Offset</h5>
+                <div class="p-3 bg-body-tertiary rounded mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>CO2 Emissions Avoided:</span>
+                        <strong class="text-success">{{ impact.co2_saved_kg }} kg CO2e</strong>
+                    </div>
+                </div>
+                <div class="p-3 bg-body-tertiary rounded mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Tree Absorption Equivalent:</span>
+                        <strong class="text-success">{{ impact.trees_equivalent }} Trees / Year</strong>
+                    </div>
+                </div>
+                <div class="p-3 bg-body-tertiary rounded">
+                    <div class="d-flex justify-content-between">
+                        <span>Landfill Volume Saved:</span>
+                        <strong class="text-primary">{{ impact.landfill_saved_m3 }} m³ Space</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}
