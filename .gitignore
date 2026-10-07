@@ -5,6 +5,14 @@ env/
 .venv/
 *.db
 .env
+*.env
+ecoroute.db
+.vercel/
+node_modules/
+.pytest_cache/
+.coverage
+.vscode/
+.idea/
 app/static/uploads/*
 !app/static/uploads/.gitkeep
 .DS_Store
