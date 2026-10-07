@@ -19,7 +19,10 @@ class Config:
     elif os.environ.get('USE_MYSQL') == 'True':
         SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
     else:
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'ecoroute.db')
+        if os.environ.get('VERCEL'):
+            SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/ecoroute.db'
+        else:
+            SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'ecoroute.db')
         
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
