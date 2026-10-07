@@ -35,7 +35,10 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # Ensure upload directory exists
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    try:
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    except OSError:
+        pass  # Read-only file system on Vercel/serverless environments
 
     # Initialize extensions
     db.init_app(app)
@@ -68,6 +71,9 @@ def create_app(config_class=Config):
 
     # Create tables if using SQLite
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception:
+            pass  # May fail on read-only filesystems if DB is not properly configured
 
     return app
