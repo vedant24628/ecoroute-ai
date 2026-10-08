@@ -152,9 +152,9 @@ def assignments():
     form = AssignmentForm()
     
     pending_pickups = PickupRequest.query.filter_by(status='PENDING').all()
-    available_vehicles = Vehicle.query.all()
-    available_workers = Worker.query.all()
-    available_drivers = Driver.query.all()
+    available_vehicles = Vehicle.query.filter_by(status='Available').all()
+    available_workers = Worker.query.filter_by(status='AVAILABLE').all()
+    available_drivers = Driver.query.filter_by(status='AVAILABLE').all()
 
     form.pickup_request_id.choices = [(p.id, f"{p.request_code} - {p.society.society_name} ({p.urgency_level})") for p in pending_pickups]
     form.vehicle_id.choices = [(v.id, f"{v.vehicle_number} ({v.vehicle_type})") for v in available_vehicles]
@@ -164,20 +164,38 @@ def assignments():
     if form.validate_on_submit():
         p_req = PickupRequest.query.get_or_404(form.pickup_request_id.data)
         
+        # Server-side race condition protection
+        vehicle = Vehicle.query.get(form.vehicle_id.data)
+        if not vehicle or vehicle.status != 'Available':
+            flash('Selected vehicle is no longer available. Please select another vehicle.', 'danger')
+            return redirect(url_for('admin.assignments'))
+            
+        worker = Worker.query.get(form.worker_id.data)
+        if not worker or worker.status != 'AVAILABLE':
+            flash('Selected worker is no longer available. Please select another worker.', 'danger')
+            return redirect(url_for('admin.assignments'))
+            
+        driver_id = form.driver_id.data if form.driver_id.data != 0 else None
+        if driver_id:
+            driver = Driver.query.get(driver_id)
+            if not driver or driver.status != 'AVAILABLE':
+                flash('Selected driver is no longer available. Please select another driver.', 'danger')
+                return redirect(url_for('admin.assignments'))
+            driver.status = 'ON_DUTY'
+        
         assignment = Assignment(
             pickup_request_id=p_req.id,
             vehicle_id=form.vehicle_id.data,
             worker_id=form.worker_id.data,
-            driver_id=form.driver_id.data if form.driver_id.data != 0 else None,
+            driver_id=driver_id,
             estimated_eta_minutes=form.estimated_eta_minutes.data,
             status='DISPATCHED'
         )
         p_req.status = 'ASSIGNED'
         
-        # Update vehicle status
-        vehicle = Vehicle.query.get(form.vehicle_id.data)
-        if vehicle:
-            vehicle.status = 'Assigned'
+        # Update statuses
+        vehicle.status = 'Assigned'
+        worker.status = 'ASSIGNED'
 
         db.session.add(assignment)
         db.session.commit()
@@ -185,7 +203,7 @@ def assignments():
         return redirect(url_for('admin.assignments'))
 
     all_assignments = Assignment.query.order_by(Assignment.id.desc()).all()
-    return render_template('admin/assignments.html', assignments=all_assignments, form=form, pending_pickups=pending_pickups)
+    return render_template('admin/assignments.html', assignments=all_assignments, form=form, pending_pickups=pending_pickups, available_vehicles=available_vehicles, available_workers=available_workers)
 
 @admin_bp.route('/ai-optimize-routes')
 @login_required

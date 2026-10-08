@@ -25,32 +25,42 @@
                         <h4 class="fw-bold mb-3"><i class="fas fa-paper-plane text-success me-2"></i> Dispatch Pickup Assignment</h4>
                         
                         {% if pending_pickups %}
-                        <form method="POST" action="{{ url_for('admin.assignments') }}">
-                            {{ form.hidden_tag() }}
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">{{ form.pickup_request_id.label }}</label>
-                                {{ form.pickup_request_id(class="form-select") }}
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">{{ form.vehicle_id.label }}</label>
-                                {{ form.vehicle_id(class="form-select") }}
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">{{ form.worker_id.label }}</label>
-                                {{ form.worker_id(class="form-select") }}
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">{{ form.driver_id.label }}</label>
-                                {{ form.driver_id(class="form-select") }}
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">{{ form.estimated_eta_minutes.label }}</label>
-                                {{ form.estimated_eta_minutes(class="form-control") }}
-                            </div>
-                            <div class="d-grid">
-                                {{ form.submit(class="btn btn-primary-custom rounded-pill") }}
-                            </div>
-                        </form>
+                            {% if not available_vehicles %}
+                                <div class="alert alert-warning border-0 mb-0">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> No available vehicles. Please wait for a vehicle to return or register a new one.
+                                </div>
+                            {% elif not available_workers %}
+                                <div class="alert alert-warning border-0 mb-0">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> No available workers. Please wait for a worker to finish their shift.
+                                </div>
+                            {% else %}
+                                <form method="POST" action="{{ url_for('admin.assignments') }}">
+                                    {{ form.hidden_tag() }}
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">{{ form.pickup_request_id.label }}</label>
+                                        {{ form.pickup_request_id(class="form-select") }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">{{ form.vehicle_id.label }}</label>
+                                        {{ form.vehicle_id(class="form-select") }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">{{ form.worker_id.label }}</label>
+                                        {{ form.worker_id(class="form-select") }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">{{ form.driver_id.label }}</label>
+                                        {{ form.driver_id(class="form-select") }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">{{ form.estimated_eta_minutes.label }}</label>
+                                        {{ form.estimated_eta_minutes(class="form-control") }}
+                                    </div>
+                                    <div class="d-grid">
+                                        {{ form.submit(class="btn btn-primary-custom rounded-pill") }}
+                                    </div>
+                                </form>
+                            {% endif %}
                         {% else %}
                         <div class="alert alert-info border-0 mb-0">
                             <i class="fas fa-check-circle me-1"></i> No pending pickup requests requiring dispatch.
