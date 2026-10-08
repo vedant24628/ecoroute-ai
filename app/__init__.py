@@ -69,11 +69,20 @@ def create_app(config_class=Config):
     app.register_blueprint(worker_bp, url_prefix='/worker')
     app.register_blueprint(api_bp, url_prefix='/api')
 
-    # Create tables if using SQLite
+    # Create tables only for SQLite development/fallback
     with app.app_context():
-        try:
-            db.create_all()
-        except Exception:
-            pass  # May fail on read-only filesystems if DB is not properly configured
+        if app.config.get('SQLALCHEMY_DATABASE_URI', '').startswith('sqlite'):
+            try:
+                db.create_all()
+            except Exception:
+                pass
+        else:
+            # Safely upgrade TiDB production schema to store compressed Base64 images
+            try:
+                from sqlalchemy import text
+                db.session.execute(text('ALTER TABLE collections MODIFY image_proof MEDIUMTEXT'))
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
 
     return app

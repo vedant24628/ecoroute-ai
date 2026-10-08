@@ -187,7 +187,7 @@ class Collection(db.Model):
     dry_waste_kg = db.Column(db.Float, default=0.0)
     recyclable_kg = db.Column(db.Float, default=0.0)
     hazardous_kg = db.Column(db.Float, default=0.0)
-    image_proof = db.Column(db.String(255))
+    image_proof = db.Column(db.Text)
     remarks = db.Column(db.Text)
     collected_at = db.Column(db.DateTime, default=datetime.utcnow)
 

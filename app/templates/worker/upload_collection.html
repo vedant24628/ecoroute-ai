@@ -46,11 +46,77 @@
                     </div>
 
                     <div class="d-grid">
-                        {{ form.submit(class="btn btn-primary-custom btn-lg rounded-pill") }}
+                        <input type="hidden" name="image_proof_base64" id="image_proof_base64">
+                        {{ form.submit(class="btn btn-primary-custom btn-lg rounded-pill", id="submit-btn") }}
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('image_proof');
+    const base64Input = document.getElementById('image_proof_base64');
+    const form = fileInput.closest('form');
+    
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Ensure it's an image
+        if (!file.type.startsWith('image/')) {
+            alert('Please select a valid image file.');
+            fileInput.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Max dimensions
+                const MAX_WIDTH = 800;
+                const MAX_HEIGHT = 800;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height = Math.round(height *= MAX_WIDTH / width);
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width = Math.round(width *= MAX_HEIGHT / height);
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Compress to JPEG with 0.7 quality
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                base64Input.value = dataUrl;
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    form.addEventListener('submit', function(e) {
+        // If we successfully compressed the image, remove the file input name 
+        // so the browser doesn't send the massive multipart file, avoiding Vercel's 413 error.
+        if (base64Input.value) {
+            fileInput.removeAttribute('name');
+        }
+    });
+});
+</script>
 {% endblock %}

@@ -75,13 +75,23 @@ def collect(assignment_id):
         total = wet + dry + plastic + haz
 
         filename = 'default_proof.jpg'
-        if form.image_proof.data:
+        
+        # New client-side compressed Base64 flow
+        base64_data = request.form.get('image_proof_base64')
+        if base64_data and base64_data.startswith('data:image'):
+            filename = base64_data
+        elif form.image_proof.data:
+            # Fallback for old flow or local testing if JS is disabled
             file = form.image_proof.data
             original_name = secure_filename(file.filename or '')
-            ext = original_name.rsplit('.', 1)[1].lower() if '.' in original_name else 'jpg'
-            filename = f"proof_{assignment.id}_{int(datetime.now().timestamp())}.{ext}"
-            upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-            file.save(upload_path)
+            if original_name:
+                ext = original_name.rsplit('.', 1)[1].lower() if '.' in original_name else 'jpg'
+                filename = f"proof_{assignment.id}_{int(datetime.now().timestamp())}.{ext}"
+                try:
+                    upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                    file.save(upload_path)
+                except OSError:
+                    pass # Ignore read-only FS error on Vercel
 
         collection = Collection(
             assignment_id=assignment.id,
